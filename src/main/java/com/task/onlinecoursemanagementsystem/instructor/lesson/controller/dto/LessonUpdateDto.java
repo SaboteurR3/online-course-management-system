@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record LessonUpdateDto(
         @NotEmpty
@@ -15,6 +16,7 @@ public record LessonUpdateDto(
         Integer durationInMinutes,
         @NotNull
         @FutureOrPresent
-        LocalDateTime startTime
+        LocalDateTime startTime,
+        List<@NotNull Long> attachmentIds
 ) {
 }

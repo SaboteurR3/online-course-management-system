@@ -1,7 +1,8 @@
 package com.task.onlinecoursemanagementsystem.common.lesson.repository.entity;
 
+import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.Attachment;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Course;
-import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,7 +10,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -20,6 +23,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "lesson")
@@ -51,6 +56,15 @@ public class Lesson {
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
+
+    @Builder.Default // TODO ?
+    @JoinTable(
+            name = "lesson_attachments",
+            joinColumns = @JoinColumn(name = "lesson_id"),
+            inverseJoinColumns = @JoinColumn(name = "attachment_id")
+    )
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Attachment> LessonAttachments = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

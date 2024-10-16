@@ -5,7 +5,7 @@ application:
       expiration: 86400000
       refresh-token:
         expiration: 604800000
-
+---
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -24,13 +24,23 @@ spring:
       time: HH:mm:ss
   jackson:
     default-property-inclusion: non_null
-
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+---
 springdoc:
   api-docs:
     enabled: true
     path: /swagger/docs
   swagger-ui:
     path: /swagger/ui.html
-
+---
+minio:
+  url: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: my-bucket
+---
 server:
   port: 8089

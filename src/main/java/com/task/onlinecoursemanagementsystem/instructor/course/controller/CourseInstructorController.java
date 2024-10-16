@@ -8,6 +8,7 @@ import com.task.onlinecoursemanagementsystem.common.review.service.ReviewService
 import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseCreateDto;
 import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseDetailsGetDto;
 import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseGetDto;
+import com.task.onlinecoursemanagementsystem.security.user.repository.entity.UserGetDto;
 import com.task.onlinecoursemanagementsystem.student.review.controller.dto.ReviewGetDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("instructor/courses")
@@ -53,6 +56,12 @@ public class CourseInstructorController {
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public CourseDetailsGetDto getCourseById(@PathVariable Long id) {
         return courseService.getCourseDetailsById(id);
+    }
+
+    @GetMapping("{id}/students")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public List<UserGetDto> getCourseStudents(@PathVariable Long id) {
+        return courseService.getCourseStudents(id);
     }
 
     @PostMapping

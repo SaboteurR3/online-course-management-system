@@ -61,6 +61,28 @@ create table lesson
 );
 grant select, insert, update, delete on lesson to postgres;
 
+create sequence seq_attachment start with 1000;
+grant select, usage on seq_attachment to postgres;
+create table attachment
+(
+    id             bigint       not null primary key,
+    name           varchar(255) not null,
+    content_type   varchar(255) not null,
+    creation_ts    timestamp    not null,
+    is_active      boolean      not null,
+    author_user_id bigint
+    constraint fk_attachment_author_user_id references sec_user
+);
+grant select, insert, update, delete on attachment to postgres;
+
+create table lesson_attachments
+(
+    lesson_id     bigint not null,
+    attachment_id bigint not null,
+    constraint fk_lesson_lesson_attachment_id foreign key (attachment_id) references attachment (id),
+    constraint fk_lesson_attachment_lesson_id foreign key (lesson_id) references lesson (id)
+);
+
 create sequence seq_enrollment start with 1000;
 grant select, usage on seq_enrollment to postgres;
 create table enrollment
@@ -83,7 +105,7 @@ create table review
     id         bigint         not null primary key,
     course_id  bigint         not null,
     student_id bigint         not null,
-    comment   varchar(4000),
+    comment    varchar(4000),
     rating     int            not null,
     create_ts  timestamp(255) not null,
     foreign key (course_id) references course (id),

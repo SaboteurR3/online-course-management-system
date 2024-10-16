@@ -14,6 +14,7 @@ import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.Co
 import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseGetDto;
 import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseLessonsGetDto;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
+import com.task.onlinecoursemanagementsystem.security.user.repository.entity.UserGetDto;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,10 @@ public class CourseService {
         return repository.getCourses(pageable, category, search);
     }
 
+    public List<UserGetDto> getCourseStudents(Long courseId) { // TODO continue
+        return repository.getCourseStudents(courseId);
+    }
+
     public CourseDetailsGetDto getCourseDetailsById(Long id) {
         return repository.getCourseDetails(id).map(course -> {
             User instructor = course.getInstructor();
@@ -63,9 +68,6 @@ public class CourseService {
                     .instructorName(String.join(" ", instructor.getFirstName(), instructor.getLastName()))
                     .instructorEmail(instructor.getEmail())
                     .lessons(lessonDtos)
-                    .students(course.getStudents().stream()
-                            .map(user -> String.format("%s %s", user.getFirstName(), user.getLastName()))
-                            .toList())
                     .build();
         }).orElseThrow(SecurityViolationException::new);
     }

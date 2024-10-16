@@ -7,8 +7,15 @@ import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageAndSor
 import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageView;
 import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.LessonGetDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,5 +43,27 @@ public class LessonStudentController {
             @RequestParam(required = false) String search
     ) {
         return PageView.of(lessonService.getLessons(pageAndSortCriteria, courseId, search));
+    }
+
+    @GetMapping("files")
+    @PreAuthorize("hasRole('STUDENT')")
+    public List<IdNameDto> getLessonFiles(@RequestParam(required = false) String search) {
+        return lessonService.getLessonFiles(search);
+    }
+
+    @PreAuthorize("hasRole('STUDENT')") // TODO refactor this
+    @GetMapping("download/{fileName}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+        try {
+            InputStreamResource resource = lessonService.downloadLesson(fileName);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
 }

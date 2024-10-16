@@ -12,7 +12,6 @@ public record CourseDetailsGetDto(
         CourseCategory category,
         String instructorName,
         String instructorEmail,
-        List<String> students,
         List<CourseLessonsGetDto> lessons
 ) {
 }

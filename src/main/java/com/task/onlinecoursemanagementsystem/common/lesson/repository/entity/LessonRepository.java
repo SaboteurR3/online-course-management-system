@@ -1,10 +1,13 @@
 package com.task.onlinecoursemanagementsystem.common.lesson.repository.entity;
 
+import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
 import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.LessonGetDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Query("""
@@ -28,4 +31,13 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                             or c.description ilike %:search%)
             """)
     Page<LessonGetDto> getLessons(Pageable pageable, Long courseId, String search);
+
+    @Query("""
+        SELECT
+            a.id         AS  id,
+            a.name       AS name
+        FROM Lesson l
+        JOIN l.LessonAttachments a
+    """)
+    List<IdNameDto> getLessonFiles(); // TODO test this
 }

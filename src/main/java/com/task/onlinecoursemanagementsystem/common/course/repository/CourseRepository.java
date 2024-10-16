@@ -4,6 +4,7 @@ import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Cou
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.CourseCategory;
 import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
 import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseGetDto;
+import com.task.onlinecoursemanagementsystem.security.user.repository.entity.UserGetDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,8 +47,16 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             SELECT c
             FROM Course c
             LEFT JOIN FETCH c.lessons l
-            LEFT JOIN FETCH c.students s
             WHERE c.id = :id
             """)
     Optional<Course> getCourseDetails(Long id);
+
+    @Query("""
+            SELECT
+                ci               AS instructor
+            FROM Course c
+            JOIN c.instructor ci
+            WHERE c.id = :courseId
+    """)
+    List<UserGetDto> getCourseStudents(Long courseId);
 }

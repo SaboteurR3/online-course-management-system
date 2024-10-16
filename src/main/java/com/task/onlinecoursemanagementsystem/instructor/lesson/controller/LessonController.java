@@ -11,17 +11,19 @@ import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.Le
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -48,21 +50,30 @@ public class LessonController {
         return PageView.of(lessonService.getLessons(pageAndSortCriteria, courseId, search));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createLesson(@Valid @RequestBody LessonCreateDto data) {
-        lessonService.createLesson(data);
+    public void createLesson(
+            @RequestPart @Valid LessonCreateDto data,
+            @RequestParam(name = "attachments", required = false) List<MultipartFile> attachments) {
+        lessonService.createLesson(data, attachments);
     }
 
-    @PutMapping("{id}")
+    @PutMapping(path = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateLesson(
             @PathVariable Long id,
-            @Valid @RequestBody LessonUpdateDto data
+            @RequestPart @Valid LessonUpdateDto data,
+            @RequestParam(name = "attachments", required = false) List<MultipartFile> attachments
     ) {
-        lessonService.updateLesson(id, data);
+        lessonService.updateLesson(id, data, attachments);
+    }
+
+    @GetMapping("files")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public List<IdNameDto> getLessonFiles(@RequestParam(required = false) String search) {
+        return lessonService.getLessonFiles(search);
     }
 
     @DeleteMapping("{id}")
