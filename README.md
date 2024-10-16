@@ -12,7 +12,7 @@ docker run -d `
   -v minio-data:/data `
   minio/minio server /data
 
-## API Documentation
+### API Documentation
 
 The APIs for this project can be accessed through the Swagger UI at the following endpoint:
 
