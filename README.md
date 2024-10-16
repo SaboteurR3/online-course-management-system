@@ -5,7 +5,7 @@ The APIs for this project can be accessed through the Swagger UI at the followin
 You can use this interface to explore the available APIs, their request and response formats, and test them directly from your browser.
 
 
-# Run MinIO in Docker Desktop
+## Run MinIO in Docker Desktop
 
 To run MinIO in Docker Desktop, execute the following command in your terminal or PowerShell:
 
