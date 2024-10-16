@@ -1,4 +1,4 @@
-package com.task.onlinecoursemanagementsystem.common.enrollment.repository.entity;
+package com.task.onlinecoursemanagementsystem.student_module.enrollment.repository.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

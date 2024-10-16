@@ -1,0 +1,30 @@
+package com.task.onlinecoursemanagementsystem.student_module.enrollment.repository;
+
+import com.task.onlinecoursemanagementsystem.student_module.enrollment.controller.dto.EnrollmentsGetDto;
+import com.task.onlinecoursemanagementsystem.student_module.enrollment.repository.entity.Enrollment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
+    @Query(
+            """
+                    SELECT
+                        e.id                AS id,
+                        c.title             AS courseTitle,
+                        c.description       AS courseDescription,
+                        c.id                AS courseId,
+                        e.enrollmentDate    AS enrollmentDate,
+                        e.progress          AS progress,
+                        e.status            AS status
+                    FROM Enrollment e
+                    JOIN e.course c
+                    WHERE e.student.id = :StudentId
+                    AND (:courseId is null or c.id = :courseId)
+                                AND (:search is null
+                                    or c.title ilike %:search%
+                                    or c.description ilike %:search%)
+                    """)
+    Page<EnrollmentsGetDto> getEnrollments(Pageable pageable, Long courseId, Long StudentId, String search);
+}

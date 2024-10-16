@@ -4,13 +4,13 @@ import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Cou
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.CourseCategory;
 import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
 import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseGetDto;
-import com.task.onlinecoursemanagementsystem.instructor_module.lesson.controller.dto.LessonGetDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("""
@@ -41,4 +41,13 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             WHERE (:search is null or c.title ilike %:search%)
             """)
     List<IdNameDto> getCourses(String search);
+
+    @Query("""
+            SELECT c
+            FROM Course c
+            LEFT JOIN FETCH c.lessons l
+            LEFT JOIN FETCH c.students s
+            WHERE c.id = :id
+            """)
+    Optional<Course> getCourseDetails(Long id);
 }

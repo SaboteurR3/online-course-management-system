@@ -1,6 +1,6 @@
 package com.task.onlinecoursemanagementsystem.common.course.repository.entity;
 
-import com.task.onlinecoursemanagementsystem.common.enrollment.repository.entity.Enrollment;
+import com.task.onlinecoursemanagementsystem.student_module.enrollment.repository.entity.Enrollment;
 import com.task.onlinecoursemanagementsystem.common.lesson.repository.entity.Lesson;
 import com.task.onlinecoursemanagementsystem.common.review.repository.entity.Review;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "course")
@@ -64,7 +65,7 @@ public class Course {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    private List<User> students;
+    private Set<User> students;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lesson> lessons;

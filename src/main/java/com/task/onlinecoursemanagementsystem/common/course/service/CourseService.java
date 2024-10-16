@@ -4,6 +4,7 @@ import com.task.onlinecoursemanagementsystem.common.course.repository.CourseRepo
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Course;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.CourseCategory;
 import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
+import com.task.onlinecoursemanagementsystem.common.lesson.repository.entity.Lesson;
 import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageAndSortCriteria;
 import com.task.onlinecoursemanagementsystem.common.service.ExceptionUtil;
 import com.task.onlinecoursemanagementsystem.exception.BusinessException;
@@ -11,6 +12,7 @@ import com.task.onlinecoursemanagementsystem.exception.SecurityViolationExceptio
 import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseCreateDto;
 import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseDetailsGetDto;
 import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseGetDto;
+import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseLessonsGetDto;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
 import jakarta.transaction.Transactional;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -48,17 +51,34 @@ public class CourseService {
     }
 
     public CourseDetailsGetDto getCourseDetailsById(Long id) {
-        Course course = lookupCourse(id);
-        User instructor = course.getInstructor();
-        return CourseDetailsGetDto.builder()
-                .title(course.getTitle())
-                .description(course.getDescription())
-                .category(course.getCategory())
-                .instructorName(String.join(" ", instructor.getFirstName(), instructor.getLastName()))
-                .instructorEmail(instructor.getEmail())
-                .lessons(course.getLessons()) // TODO TEST lessons and students if returned and how
-                .students(course.getStudents())
-                .build();
+        return repository.getCourseDetails(id).map(course -> {
+            User instructor = course.getInstructor();
+
+            List<CourseLessonsGetDto> lessonDtos = mapLessonsToDto(course.getLessons());
+
+            return CourseDetailsGetDto.builder()
+                    .title(course.getTitle())
+                    .description(course.getDescription())
+                    .category(course.getCategory())
+                    .instructorName(String.join(" ", instructor.getFirstName(), instructor.getLastName()))
+                    .instructorEmail(instructor.getEmail())
+                    .lessons(lessonDtos)
+                    .students(course.getStudents().stream()
+                            .map(user -> String.format("%s %s", user.getFirstName(), user.getLastName()))
+                            .toList())
+                    .build();
+        }).orElseThrow(SecurityViolationException::new);
+    }
+
+    private List<CourseLessonsGetDto> mapLessonsToDto(List<Lesson> lessons) {
+        return lessons.stream()
+                .map(lesson -> CourseLessonsGetDto.builder()
+                        .title(lesson.getTitle())
+                        .content(lesson.getContent())
+                        .duration(lesson.getDurationInMinutes())
+                        .startTime(lesson.getStartTime())
+                        .build())
+                .toList();
     }
 
     public void createCourse(CourseCreateDto data) {
@@ -68,7 +88,7 @@ public class CourseService {
                 .description(data.description())
                 .category(data.category())
                 .instructor(currentUser)
-                .students(new ArrayList<>())
+                .students(new HashSet<>())
                 .lessons(new ArrayList<>())
                 .enrollments(new ArrayList<>())
                 .reviews(new ArrayList<>())

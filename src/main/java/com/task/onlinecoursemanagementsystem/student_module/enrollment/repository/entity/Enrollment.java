@@ -1,4 +1,4 @@
-package com.task.onlinecoursemanagementsystem.common.enrollment.repository.entity;
+package com.task.onlinecoursemanagementsystem.student_module.enrollment.repository.entity;
 
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Course;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
