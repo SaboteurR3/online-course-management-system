@@ -39,7 +39,7 @@ public class EnrollmentService {
             String search) {
         Pageable pageable = pageAndSortCriteria.build("id");
         User user = userService.curentUser();
-        return repository.getEnrollments(pageable, courseId, user.getId(), search);
+        return repository.getEnrollments(pageable, courseId, user.getId(), true, search);
     }
 
     public void enrollStudent(Long courseId) {
