@@ -69,6 +69,7 @@ create table enrollment
     student_id bigint       not null,
     course_id  bigint       not null,
     status     varchar(255) not null,
+    is_active  boolean      not null,
     foreign key (student_id) references sec_user (id),
     foreign key (course_id) references course (id),
     constraint unique_enrollment unique (student_id, course_id)

@@ -8,9 +8,11 @@ import com.task.onlinecoursemanagementsystem.exception.SecurityViolationExceptio
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
 import com.task.onlinecoursemanagementsystem.student_module.enrollment.controller.dto.EnrollmentsGetDto;
+import com.task.onlinecoursemanagementsystem.student_module.enrollment.controller.dto.ProgressUpdateDto;
 import com.task.onlinecoursemanagementsystem.student_module.enrollment.repository.EnrollmentRepository;
 import com.task.onlinecoursemanagementsystem.student_module.enrollment.repository.entity.Enrollment;
 import com.task.onlinecoursemanagementsystem.student_module.enrollment.repository.entity.EnrollmentStatus;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class EnrollmentService {
     private final UserService userService;
@@ -35,16 +38,12 @@ public class EnrollmentService {
             Long courseId,
             String search) {
         Pageable pageable = pageAndSortCriteria.build("id");
-        Course course = courseService.lookupCourse(courseId);
-        return repository.getEnrollments(pageable, courseId, course.getId(), search);
+        User user = userService.curentUser();
+        return repository.getEnrollments(pageable, courseId, user.getId(), search);
     }
 
-//    public Page<LessonGetDto> getAllEnrollmentStatus(Long courseId) {
-//        return repository.getCurrentEnrollment(courseId, search);
-//    }
-
     public void enrollStudent(Long courseId) {
-        User currentStudent = userService.curentUser();
+        User currentStudent = userService.curentUser(); // TODO enrolled students must be seen in course get
         Course course = courseService.lookupCourse(courseId);
         Enrollment enrollment = Enrollment.builder()
                 .student(currentStudent)
@@ -52,15 +51,22 @@ public class EnrollmentService {
                 .enrollmentDate(LocalDateTime.now())
                 .progress(0.0)
                 .status(EnrollmentStatus.ACTIVE)
+                .active(true)
                 .build();
         try {
             repository.saveAndFlush(enrollment);
         } catch (Exception e) {
-            ExceptionUtil.handleDatabaseExceptions(e, Map.of("uq_course_title_start_time", "course_title_start_time_must_be_unique"));
+            ExceptionUtil.handleDatabaseExceptions(e, Map.of("unique_enrollment", "student_already_enrolled_in_current_course"));
         }
     }
 
-    public void updateProgress(Long id) {
+    public void updateProgress(Long id, ProgressUpdateDto data) {
+        Enrollment enrollment = lookupEnrollment(id);
+        enrollment.setProgress(data.newProgress());
+    }
 
+    public void unenrollFromCourse(Long id) {
+        Enrollment enrollment = lookupEnrollment(id);
+        enrollment.setActive(false);
     }
 }

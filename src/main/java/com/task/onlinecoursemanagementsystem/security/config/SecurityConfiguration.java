@@ -52,8 +52,10 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "student/session/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "instructor/session/**").permitAll()
                                 .requestMatchers("/instructor/courses/**").hasAnyRole(INSTRUCTOR.name())
-                                .requestMatchers("/instructor/lessons/**").hasAnyRole(INSTRUCTOR.name())
                                 .requestMatchers("/instructor/lessons").hasAnyRole(INSTRUCTOR.name())
+                                .requestMatchers("/instructor/lessons/**").hasAnyRole(INSTRUCTOR.name())
+                                .requestMatchers("/student/enrollments").hasAnyRole(STUDENT.name())
+                                .requestMatchers("/student/enrollments/**").hasAnyRole(STUDENT.name())
                 )
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

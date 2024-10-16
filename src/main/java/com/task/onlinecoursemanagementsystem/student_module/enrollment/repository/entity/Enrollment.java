@@ -56,6 +56,10 @@ public class Enrollment {
     @Column(name = "status")
     private EnrollmentStatus status;
 
+    @Setter
+    @Column(name = "is_active")
+    private boolean active;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

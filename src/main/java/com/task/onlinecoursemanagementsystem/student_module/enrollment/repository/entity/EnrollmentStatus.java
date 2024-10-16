@@ -7,8 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum EnrollmentStatus {
     ACTIVE("აქტიური"),
-    COMPLETED("დასრულებული"),
-    IN_PROGRESS("მიმდინარე");
+    COMPLETED("დასრულებული");
 
     private final String nameKa;
 }

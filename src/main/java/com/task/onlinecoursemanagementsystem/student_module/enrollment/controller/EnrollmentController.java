@@ -7,13 +7,17 @@ import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageView;
 import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseDetailsGetDto;
 import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseGetDto;
 import com.task.onlinecoursemanagementsystem.student_module.enrollment.controller.dto.EnrollmentsGetDto;
+import com.task.onlinecoursemanagementsystem.student_module.enrollment.controller.dto.ProgressUpdateDto;
 import com.task.onlinecoursemanagementsystem.student_module.enrollment.service.EnrollmentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -65,12 +69,19 @@ public class EnrollmentController {
         enrollmentService.enrollStudent(courseId);
     }
 
-//    @PutMapping("{id}/progress")
-//    @PreAuthorize("hasRole('STUDENT')")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void updateProgress(
-//            @PathVariable Long id,
-//            @Valid @RequestBody ProgressUpdateDto progressUpdateDto) {
-//        enrollmentService.updateProgress(id, progressUpdateDto);
-//    }
+    @PatchMapping("{id}/change-progress")
+    @PreAuthorize("hasRole('STUDENT')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateProgress(
+            @PathVariable Long id,
+            @Valid @RequestBody ProgressUpdateDto progressUpdateDto) {
+        enrollmentService.updateProgress(id, progressUpdateDto);
+    }
+
+    @PatchMapping("{id}/unenroll")
+    @PreAuthorize("hasRole('STUDENT')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void unenrollFromCourse(@PathVariable Long id) {
+        enrollmentService.unenrollFromCourse(id);
+    }
 }
