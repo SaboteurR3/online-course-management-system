@@ -1,4 +1,4 @@
-package com.task.onlinecoursemanagementsystem.properties;
+package com.task.onlinecoursemanagementsystem;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
