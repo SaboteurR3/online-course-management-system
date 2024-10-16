@@ -45,7 +45,7 @@ public class Lesson {
     private String title;
 
     @Column(name = "content", nullable = false)
-    private String content; // TODO add files list for lesson documents
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)

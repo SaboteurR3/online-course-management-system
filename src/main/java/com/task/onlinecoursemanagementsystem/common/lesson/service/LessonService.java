@@ -150,12 +150,18 @@ public class LessonService {
         return attachmentsToDelete;
     }
 
-    private Attachment saveAttachment(User author, MultipartFile attachment) {
-        return attachmentService.saveAttachment(author, attachment);
+    private Attachment saveAttachment(User author, MultipartFile file) {
+        return attachmentService.saveAttachment(author, file);
     }
 
-    public List<IdNameDto> getLessonFiles(String search) {
-        return repository.getLessonFiles();
+    public List<IdNameDto> getInstructorLessonFiles(Long lessonId) {
+        User user = userService.curentUser();
+        return repository.getInstructorLessonFiles(user.getId(), lessonId);
+    }
+
+    public List<IdNameDto> getStudentLessonFiles() {
+        User user = userService.curentUser();
+        return repository.getStudentLessonFiles(user.getId());
     }
 
     public InputStreamResource downloadLesson(String fileName) {

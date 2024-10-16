@@ -66,7 +66,7 @@ public class CourseInstructorController {
 
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    @ResponseStatus(HttpStatus.CREATED) // TODO add file for syllabus
+    @ResponseStatus(HttpStatus.CREATED)
     public void createCourse(@Valid @RequestBody CourseCreateDto data) {
         courseService.createCourse(data);
     }

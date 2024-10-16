@@ -51,7 +51,7 @@ public class CourseService {
         return repository.getCourses(pageable, category, search);
     }
 
-    public List<UserGetDto> getCourseStudents(Long courseId) { // TODO continue
+    public List<UserGetDto> getCourseStudents(Long courseId) {
         return repository.getCourseStudents(courseId);
     }
 

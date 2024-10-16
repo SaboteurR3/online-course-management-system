@@ -43,8 +43,9 @@ public class EnrollmentService {
     }
 
     public void enrollStudent(Long courseId) {
-        User currentStudent = userService.curentUser(); // TODO enrolled students must be seen in course get
+        User currentStudent = userService.curentUser();
         Course course = courseService.lookupCourse(courseId);
+        course.getStudents().add(currentStudent);
         Enrollment enrollment = Enrollment.builder()
                 .student(currentStudent)
                 .course(course)

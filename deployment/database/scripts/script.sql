@@ -46,6 +46,15 @@ create table course
 );
 grant select, insert, update, delete on course to postgres;
 
+create table course_student
+(
+    course_id  bigint not null,
+    student_id bigint not null,
+    constraint fk_course foreign key (course_id) references course (id),
+    constraint fk_student foreign key (student_id) references sec_user (id),
+    primary key (course_id, student_id)
+);
+
 create sequence seq_lesson start with 1000;
 grant select, usage on seq_lesson to postgres;
 create table lesson
@@ -71,7 +80,7 @@ create table attachment
     creation_ts    timestamp    not null,
     is_active      boolean      not null,
     author_user_id bigint
-    constraint fk_attachment_author_user_id references sec_user
+        constraint fk_attachment_author_user_id references sec_user
 );
 grant select, insert, update, delete on attachment to postgres;
 

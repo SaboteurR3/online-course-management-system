@@ -17,7 +17,7 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 public class MinioService {
     @Value("${minio.bucket-name}")
-    private String bucketName; // TODO in config?
+    private String bucketName;
 
     private final MinioClient minioClient;
 

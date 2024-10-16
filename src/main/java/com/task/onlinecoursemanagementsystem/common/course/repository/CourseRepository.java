@@ -53,9 +53,11 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("""
             SELECT
-                ci               AS instructor
+                s.firstName    AS firstName,
+                s.lastName     AS lastName,
+                s.email        AS email
             FROM Course c
-            JOIN c.instructor ci
+            JOIN c.students s
             WHERE c.id = :courseId
     """)
     List<UserGetDto> getCourseStudents(Long courseId);

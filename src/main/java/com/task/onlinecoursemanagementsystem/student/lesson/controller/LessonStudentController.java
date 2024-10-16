@@ -47,11 +47,11 @@ public class LessonStudentController {
 
     @GetMapping("files")
     @PreAuthorize("hasRole('STUDENT')")
-    public List<IdNameDto> getLessonFiles(@RequestParam(required = false) String search) {
-        return lessonService.getLessonFiles(search);
+    public List<IdNameDto> getStudentLessonFiles() {
+        return lessonService.getStudentLessonFiles();
     }
 
-    @PreAuthorize("hasRole('STUDENT')") // TODO refactor this
+    @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("download/{fileName}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
         try {
@@ -61,7 +61,6 @@ public class LessonStudentController {
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(resource);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
         }

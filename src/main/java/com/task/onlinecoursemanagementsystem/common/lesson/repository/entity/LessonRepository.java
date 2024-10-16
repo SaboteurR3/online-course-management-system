@@ -38,6 +38,20 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             a.name       AS name
         FROM Lesson l
         JOIN l.LessonAttachments a
+        WHERE l.course.instructor.id = :instructorId
+        AND (:lessonId is null or l.id = :lessonId)
     """)
-    List<IdNameDto> getLessonFiles(); // TODO test this
+    List<IdNameDto> getInstructorLessonFiles(Long instructorId, Long lessonId);
+
+    @Query("""
+        SELECT
+            la.id         AS id,
+            la.name       AS name
+        FROM Lesson l
+        JOIN l.LessonAttachments la
+        JOIN l.course c
+        JOIN c.students s
+        WHERE s.id = :studentId
+    """)
+    List<IdNameDto> getStudentLessonFiles(Long studentId);
 }

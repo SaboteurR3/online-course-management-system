@@ -10,8 +10,12 @@ import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.Le
 import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.LessonUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,8 +76,23 @@ public class LessonController {
 
     @GetMapping("files")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public List<IdNameDto> getLessonFiles(@RequestParam(required = false) String search) {
-        return lessonService.getLessonFiles(search);
+    public List<IdNameDto> getLessonFiles(@RequestParam(required = false) Long lessonId) {
+        return lessonService.getInstructorLessonFiles(lessonId);
+    }
+
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @GetMapping("download-file/{fileName}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+        try {
+            InputStreamResource resource = lessonService.downloadLesson(fileName);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
 
     @DeleteMapping("{id}")
