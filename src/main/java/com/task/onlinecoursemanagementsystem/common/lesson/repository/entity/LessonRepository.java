@@ -1,6 +1,6 @@
 package com.task.onlinecoursemanagementsystem.common.lesson.repository.entity;
 
-import com.task.onlinecoursemanagementsystem.instructor_module.lesson.controller.dto.LessonGetDto;
+import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.LessonGetDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

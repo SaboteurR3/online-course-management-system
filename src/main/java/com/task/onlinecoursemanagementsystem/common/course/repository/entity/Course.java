@@ -1,6 +1,6 @@
 package com.task.onlinecoursemanagementsystem.common.course.repository.entity;
 
-import com.task.onlinecoursemanagementsystem.student_module.enrollment.repository.entity.Enrollment;
+import com.task.onlinecoursemanagementsystem.student.enrollment.repository.entity.Enrollment;
 import com.task.onlinecoursemanagementsystem.common.lesson.repository.entity.Lesson;
 import com.task.onlinecoursemanagementsystem.common.review.repository.entity.Review;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;

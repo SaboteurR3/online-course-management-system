@@ -44,7 +44,7 @@ public class SecurityConfiguration {
                 .exceptionHandling(config ->
                         config.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(
-                        configurer -> configurer // TODO correct apis urls
+                        configurer -> configurer
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/swagger/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/profile").hasAnyRole(STUDENT.name(), INSTRUCTOR.name())
@@ -52,11 +52,9 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "student/session/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "instructor/session/**").permitAll()
                                 .requestMatchers("/instructor/courses/**").hasAnyRole(INSTRUCTOR.name())
-                                .requestMatchers("/instructor/lessons").hasAnyRole(INSTRUCTOR.name())
                                 .requestMatchers("/instructor/lessons/**").hasAnyRole(INSTRUCTOR.name())
-                                .requestMatchers("/student/enrollments").hasAnyRole(STUDENT.name())
+                                .requestMatchers("/student/lessons/**").hasAnyRole(STUDENT.name())
                                 .requestMatchers("/student/enrollments/**").hasAnyRole(STUDENT.name())
-                                .requestMatchers("/reviews").hasAnyRole(STUDENT.name())
                                 .requestMatchers("/reviews/**").hasAnyRole(STUDENT.name())
                 )
                 .sessionManagement(configurer ->

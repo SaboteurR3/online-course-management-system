@@ -3,7 +3,7 @@ package com.task.onlinecoursemanagementsystem.common.course.repository;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Course;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.CourseCategory;
 import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
-import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseGetDto;
+import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseGetDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

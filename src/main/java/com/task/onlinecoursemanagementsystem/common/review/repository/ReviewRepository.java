@@ -1,7 +1,7 @@
 package com.task.onlinecoursemanagementsystem.common.review.repository;
 
 import com.task.onlinecoursemanagementsystem.common.review.repository.entity.Review;
-import com.task.onlinecoursemanagementsystem.student_module.review.controller.dto.ReviewGetDto;
+import com.task.onlinecoursemanagementsystem.student.review.controller.dto.ReviewGetDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

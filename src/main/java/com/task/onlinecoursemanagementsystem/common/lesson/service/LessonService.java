@@ -8,9 +8,9 @@ import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageAndSor
 import com.task.onlinecoursemanagementsystem.common.service.ExceptionUtil;
 import com.task.onlinecoursemanagementsystem.exception.BusinessException;
 import com.task.onlinecoursemanagementsystem.exception.SecurityViolationException;
-import com.task.onlinecoursemanagementsystem.instructor_module.lesson.controller.dto.LessonCreateDto;
-import com.task.onlinecoursemanagementsystem.instructor_module.lesson.controller.dto.LessonGetDto;
-import com.task.onlinecoursemanagementsystem.instructor_module.lesson.controller.dto.LessonUpdateDto;
+import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.LessonCreateDto;
+import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.LessonGetDto;
+import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.LessonUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;

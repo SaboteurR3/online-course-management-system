@@ -9,10 +9,10 @@ import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageAndSor
 import com.task.onlinecoursemanagementsystem.common.service.ExceptionUtil;
 import com.task.onlinecoursemanagementsystem.exception.BusinessException;
 import com.task.onlinecoursemanagementsystem.exception.SecurityViolationException;
-import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseCreateDto;
-import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseDetailsGetDto;
-import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseGetDto;
-import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseLessonsGetDto;
+import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseCreateDto;
+import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseDetailsGetDto;
+import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseGetDto;
+import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseLessonsGetDto;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
 import jakarta.transaction.Transactional;

@@ -1,5 +1,6 @@
 package com.task.onlinecoursemanagementsystem.security.service;
 
+import com.task.onlinecoursemanagementsystem.security.token.model.Token;
 import com.task.onlinecoursemanagementsystem.security.token.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,8 +28,8 @@ public class LogoutService implements LogoutHandler {
       return;
     }
     jwt = authHeader.substring(7);
-    var storedToken = tokenRepository.findByToken(jwt)
-        .orElse(null);
+    Token storedToken = tokenRepository.findByToken(jwt)
+            .orElse(null);
     if (storedToken != null) {
       storedToken.setExpired(true);
       storedToken.setRevoked(true);

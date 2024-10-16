@@ -7,8 +7,8 @@ import com.task.onlinecoursemanagementsystem.common.review.repository.entity.Rev
 import com.task.onlinecoursemanagementsystem.common.review.repository.ReviewRepository;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
-import com.task.onlinecoursemanagementsystem.student_module.review.controller.dto.CourseReviewCreateDto;
-import com.task.onlinecoursemanagementsystem.student_module.review.controller.dto.ReviewGetDto;
+import com.task.onlinecoursemanagementsystem.student.review.controller.dto.CourseReviewCreateDto;
+import com.task.onlinecoursemanagementsystem.student.review.controller.dto.ReviewGetDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
