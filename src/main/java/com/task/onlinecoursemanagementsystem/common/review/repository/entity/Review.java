@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_review")
     @SequenceGenerator(name = "seq_review", sequenceName = "seq_review", allocationSize = 1, initialValue = 1000)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @ManyToOne

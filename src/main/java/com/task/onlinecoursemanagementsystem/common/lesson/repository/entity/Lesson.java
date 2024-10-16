@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,13 +33,14 @@ public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_lesson")
     @SequenceGenerator(name = "seq_lesson", sequenceName = "seq_lesson", allocationSize = 1, initialValue = 1000)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "content", nullable = false)
-    private String content;
+    private String content; // TODO add files list for lesson documents
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
@@ -49,9 +51,6 @@ public class Lesson {
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
-
-    @Column(name = "create_ts")
-    private LocalDateTime createTs;
 
     @Override
     public boolean equals(Object o) {

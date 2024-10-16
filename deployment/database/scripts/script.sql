@@ -50,12 +50,14 @@ create sequence seq_lesson start with 1000;
 grant select, usage on seq_lesson to postgres;
 create table lesson
 (
-    id         bigint        not null primary key,
-    course_id  bigint        not null,
-    title      varchar(255)  not null,
-    content    varchar(4000) not null,
-    start_time timestamp     not null,
-    foreign key (course_id) references course (id)
+    id                  bigint        not null primary key,
+    course_id           bigint        not null,
+    title               varchar(255)  not null,
+    content             varchar(4000) not null,
+    duration_in_minutes integer       not null,
+    start_time          timestamp     not null,
+    foreign key (course_id) references course (id),
+    constraint uq_course_title_start_time unique (course_id, title, start_time)
 );
 grant select, insert, update, delete on lesson to postgres;
 

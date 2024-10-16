@@ -1,12 +1,13 @@
-package com.task.onlinecoursemanagementsystem.instructor_module.course.controller;
+package com.task.onlinecoursemanagementsystem.instructor_module.lesson.controller;
 
-import com.task.onlinecoursemanagementsystem.common.course.repository.entity.CourseCategory;
 import com.task.onlinecoursemanagementsystem.common.course.service.CourseService;
+import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
+import com.task.onlinecoursemanagementsystem.common.lesson.service.LessonService;
 import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageAndSortCriteria;
 import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageView;
-import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseCreateDto;
-import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseDetailsGetDto;
-import com.task.onlinecoursemanagementsystem.instructor_module.course.controller.dto.CourseGetDto;
+import com.task.onlinecoursemanagementsystem.instructor_module.lesson.controller.dto.LessonCreateDto;
+import com.task.onlinecoursemanagementsystem.instructor_module.lesson.controller.dto.LessonGetDto;
+import com.task.onlinecoursemanagementsystem.instructor_module.lesson.controller.dto.LessonUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,55 +23,52 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("instructor/courses")
-@RequiredArgsConstructor
-public class CourseController {
-    private final CourseService service;
+import java.util.List;
 
-    @GetMapping("categories")
+@RestController
+@RequestMapping("instructor/lessons")
+@RequiredArgsConstructor
+public class LessonController {
+    private final CourseService courseService;
+    private final LessonService lessonService;
+
+    @GetMapping("courses")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public CourseCategory[] getCourseCategories() {
-        return CourseCategory.values();
+    public List<IdNameDto> getCourses(@RequestParam(required = false) String search) {
+        return courseService.getCourses(search);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public PageView<CourseGetDto> getCourses(
+    public PageView<LessonGetDto> getLessons(
             PageAndSortCriteria pageAndSortCriteria,
-            @RequestParam(required = false) CourseCategory category,
+            @RequestParam(required = false) Long courseId,
             @RequestParam(required = false) String search
     ) {
-        return PageView.of(service.getCourses(pageAndSortCriteria, category, search));
-    }
-
-    @GetMapping("{id}")
-    @PreAuthorize("hasRole('INSTRUCTOR')")
-    public CourseDetailsGetDto getCourseById(@PathVariable Long id) {
-        return service.getCourseDetailsById(id);
+        return PageView.of(lessonService.getLessons(pageAndSortCriteria, courseId, search));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCourse(@Valid @RequestBody CourseCreateDto dto) {
-        service.createCourse(dto);
+    public void createLesson(@Valid @RequestBody LessonCreateDto data) {
+        lessonService.createLesson(data);
     }
 
     @PutMapping("{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateCourse(
+    public void updateLesson(
             @PathVariable Long id,
-            @Valid @RequestBody CourseCreateDto dto
+            @Valid @RequestBody LessonUpdateDto data
     ) {
-        service.updateCourse(id, dto);
+        lessonService.updateLesson(id, data);
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCourse(@PathVariable Long id) {
-        service.deleteCourse(id);
+    public void deleteLesson(@PathVariable Long id) {
+        lessonService.deleteLesson(id);
     }
 }

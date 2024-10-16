@@ -3,6 +3,7 @@ package com.task.onlinecoursemanagementsystem.common.course.service;
 import com.task.onlinecoursemanagementsystem.common.course.repository.CourseRepository;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Course;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.CourseCategory;
+import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
 import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageAndSortCriteria;
 import com.task.onlinecoursemanagementsystem.common.service.ExceptionUtil;
 import com.task.onlinecoursemanagementsystem.exception.BusinessException;
@@ -19,8 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -34,38 +35,43 @@ public class CourseService {
         return repository.findById(id).orElseThrow(SecurityViolationException::new);
     }
 
+    public List<IdNameDto> getCourses(String search) {
+        return repository.getCourses(search);
+    }
+
     public Page<CourseGetDto> getCourses(
             PageAndSortCriteria pageAndSortCriteria,
             CourseCategory category,
             String search) {
         Pageable pageable = pageAndSortCriteria.build("id");
-        return repository.getCourses(pageable, category, search); // get only instructor name or it will loop :))))
+        return repository.getCourses(pageable, category, search);
     }
 
     public CourseDetailsGetDto getCourseDetailsById(Long id) {
         Course course = lookupCourse(id);
+        User instructor = course.getInstructor();
         return CourseDetailsGetDto.builder()
                 .title(course.getTitle())
                 .description(course.getDescription())
                 .category(course.getCategory())
-                .instructorName(course.getInstructor())
-                .lessons(course.getLessons())
+                .instructorName(String.join(" ", instructor.getFirstName(), instructor.getLastName()))
+                .instructorEmail(instructor.getEmail())
+                .lessons(course.getLessons()) // TODO TEST lessons and students if returned and how
                 .students(course.getStudents())
                 .build();
     }
 
-    public void createCourse(CourseCreateDto dto) {
+    public void createCourse(CourseCreateDto data) {
         User currentUser = userService.curentUser();
         Course course = Course.builder()
-                .title(dto.title())
-                .description(dto.description())
-                .category(dto.category())
+                .title(data.title())
+                .description(data.description())
+                .category(data.category())
                 .instructor(currentUser)
                 .students(new ArrayList<>())
                 .lessons(new ArrayList<>())
                 .enrollments(new ArrayList<>())
                 .reviews(new ArrayList<>())
-                .createTs(LocalDateTime.now())
                 .build();
 
         try {
@@ -75,11 +81,11 @@ public class CourseService {
         }
     }
 
-    public void updateCourse(Long id, CourseCreateDto dto) {
+    public void updateCourse(Long id, CourseCreateDto data) {
         Course course = lookupCourse(id);
-        course.setTitle(dto.title());
-        course.setDescription(dto.description());
-        course.setCategory(dto.category());
+        course.setTitle(data.title());
+        course.setDescription(data.description());
+        course.setCategory(data.category());
 
         try {
             repository.saveAndFlush(course);

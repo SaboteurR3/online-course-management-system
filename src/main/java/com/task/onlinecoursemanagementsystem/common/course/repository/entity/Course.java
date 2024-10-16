@@ -20,13 +20,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -41,6 +41,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_course")
     @SequenceGenerator(name = "seq_course", sequenceName = "seq_course", allocationSize = 1, initialValue = 1000)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(name = "title")
@@ -51,7 +52,7 @@ public class Course {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    private CourseCategory category;
+    private CourseCategory category; // add syllabus
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id")
@@ -73,9 +74,6 @@ public class Course {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
-
-    @Column(name = "create_ts")
-    private LocalDateTime createTs;
 
     @Override
     public boolean equals(Object o) {

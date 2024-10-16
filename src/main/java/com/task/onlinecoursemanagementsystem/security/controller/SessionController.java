@@ -28,7 +28,7 @@ public class SessionController {
     private final AuthenticationService service;
 
 
-    @PostMapping("authenticate")
+    @PostMapping
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody @NotNull @Valid AuthenticationRequestDto request
     ) {

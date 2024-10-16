@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class Enrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_enrollment")
     @SequenceGenerator(name = "seq_enrollment", sequenceName = "seq_enrollment", allocationSize = 1, initialValue = 1000)
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
