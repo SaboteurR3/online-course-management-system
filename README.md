@@ -1,4 +1,4 @@
-## Run MinIO in Docker Desktop
+# Run MinIO in Docker Desktop
 
 To run MinIO in Docker Desktop, execute the following command in your terminal or PowerShell:
 
@@ -12,7 +12,7 @@ docker run -d `
   -v minio-data:/data `
   minio/minio server /data
 
-### API Documentation
+## API Documentation
 
 The APIs for this project can be accessed through the Swagger UI at the following endpoint:
 
