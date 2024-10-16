@@ -80,11 +80,12 @@ create sequence seq_review start with 1000;
 grant select, usage on seq_review to postgres;
 create table review
 (
-    id         bigint not null primary key,
-    course_id  bigint not null,
-    student_id bigint not null,
-    comments   varchar(4000),
-    rating     int    not null,
+    id         bigint         not null primary key,
+    course_id  bigint         not null,
+    student_id bigint         not null,
+    comment   varchar(4000),
+    rating     int            not null,
+    create_ts  timestamp(255) not null,
     foreign key (course_id) references course (id),
     foreign key (student_id) references sec_user (id)
 );

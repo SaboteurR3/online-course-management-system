@@ -56,6 +56,8 @@ public class SecurityConfiguration {
                                 .requestMatchers("/instructor/lessons/**").hasAnyRole(INSTRUCTOR.name())
                                 .requestMatchers("/student/enrollments").hasAnyRole(STUDENT.name())
                                 .requestMatchers("/student/enrollments/**").hasAnyRole(STUDENT.name())
+                                .requestMatchers("/reviews").hasAnyRole(STUDENT.name())
+                                .requestMatchers("/reviews/**").hasAnyRole(STUDENT.name())
                 )
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

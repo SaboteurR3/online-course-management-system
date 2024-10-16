@@ -20,7 +20,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
                         e.status            AS status
                     FROM Enrollment e
                     JOIN e.course c
-                    WHERE e.student.id = :StudentId AND e.active = :active
+                    WHERE e.student.id = :studentId AND e.active = :active
                     AND (:courseId is null or c.id = :courseId)
                                 AND (:search is null
                                     or c.title ilike %:search%
@@ -28,7 +28,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
                     """)
     Page<EnrollmentsGetDto> getEnrollments(Pageable pageable,
                                            Long courseId,
-                                           Long StudentId,
+                                           Long studentId,
                                            Boolean active,
                                            String search);
 }
