@@ -87,5 +87,5 @@ public class Course {
     @Override
     public int hashCode() {
         return 31;
-    } // TODO why not lombok
+    }
 }

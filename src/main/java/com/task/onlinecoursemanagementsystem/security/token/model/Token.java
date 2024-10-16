@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "token") // TODO model package? what is it
+@Table(name = "token")
 public class Token {
 
   @Id

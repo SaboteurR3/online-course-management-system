@@ -57,7 +57,7 @@ public class Lesson {
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
-    @Builder.Default // TODO ?
+    @Builder.Default
     @JoinTable(
             name = "lesson_attachments",
             joinColumns = @JoinColumn(name = "lesson_id"),
