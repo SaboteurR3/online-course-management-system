@@ -5,9 +5,11 @@ import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Cou
 import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
 import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseGetDto;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.UserGetDto;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -44,6 +46,14 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             WHERE (:search is null or c.title ilike %:search%)
             """)
     List<IdNameDto> getCourses(String search);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            SELECT c
+            FROM Course c
+            WHERE c.id = :id
+            """)
+    Optional<Course> findCourseForUpdate(Long id);
 
     @Query("""
             SELECT c

@@ -47,19 +47,15 @@ public class EnrollmentService {
 
     public void enrollStudent(Long courseId) {
         User currentStudent = userService.curentUser();
-        Course course = courseService.lookupCourse(courseId);
+        Course course = courseService.findCourseForUpdate(courseId);
 
-        synchronized (this) {
-            if (!course.canEnrollStudent()) {
-                throw new BusinessException("course is full");
-            }
-
-            course.setCurrentCapacity(course.getCurrentCapacity() + 1);
-            course.getStudents().add(currentStudent);
+        if (!course.canEnrollStudent()) {
+            throw new BusinessException("course is full");
         }
+        course.setCurrentCapacity(course.getCurrentCapacity() + 1);
+        course.getStudents().add(currentStudent);
 
         Enrollment enrollment = Enrollment.builder()
-
                 .student(currentStudent)
                 .course(course)
                 .enrollmentDate(LocalDateTime.now())
@@ -76,7 +72,7 @@ public class EnrollmentService {
 
     public void updateProgress(Long id, ProgressUpdateDto data) {
         Enrollment enrollment = lookupEnrollment(id);
-        if(!enrollment.isActive()) {
+        if (!enrollment.isActive()) {
             throw new BusinessException("course is not active");
         }
 
@@ -85,11 +81,11 @@ public class EnrollmentService {
             throw new SecurityViolationException();
         }
 
-        if(EnrollmentStatus.COMPLETED.equals(enrollment.getStatus())) {
+        if (EnrollmentStatus.COMPLETED.equals(enrollment.getStatus())) {
             throw new BusinessException("course is already completed");
         }
         enrollment.setProgress(data.newProgress());
-        if(BigDecimal.valueOf(100).equals(enrollment.getProgress())) {
+        if (BigDecimal.valueOf(100).equals(enrollment.getProgress())) {
             enrollment.setStatus(EnrollmentStatus.COMPLETED);
         }
     }
@@ -101,7 +97,7 @@ public class EnrollmentService {
 
     public Enrollment findEnrollementByCourseAndUser(Course course, User user) {
         Optional<Enrollment> byCourseAndStudent = repository.findByCourseAndStudent(course, user);
-        if(byCourseAndStudent.isEmpty()){
+        if (byCourseAndStudent.isEmpty()) {
             throw new SecurityViolationException();
         }
         return byCourseAndStudent.get();

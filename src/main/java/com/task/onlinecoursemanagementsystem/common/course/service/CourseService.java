@@ -39,6 +39,10 @@ public class CourseService {
         return repository.findById(id).orElseThrow(SecurityViolationException::new);
     }
 
+    public Course findCourseForUpdate(Long id) {
+        return repository.findCourseForUpdate(id).orElseThrow(SecurityViolationException::new);
+    }
+
     public List<IdNameDto> getCourses(String search) {
         return repository.getCourses(search);
     }
