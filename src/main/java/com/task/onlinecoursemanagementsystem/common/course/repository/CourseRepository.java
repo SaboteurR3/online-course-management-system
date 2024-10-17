@@ -59,6 +59,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             SELECT c
             FROM Course c
             LEFT JOIN FETCH c.lessons l
+            LEFT JOIN FETCH c.instructor
             WHERE c.id = :id
             """)
     Optional<Course> getCourseDetails(Long id);
