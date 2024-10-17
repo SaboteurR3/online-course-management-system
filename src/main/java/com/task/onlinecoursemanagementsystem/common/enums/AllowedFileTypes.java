@@ -1,4 +1,4 @@
-package com.task.onlinecoursemanagementsystem.common;
+package com.task.onlinecoursemanagementsystem.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

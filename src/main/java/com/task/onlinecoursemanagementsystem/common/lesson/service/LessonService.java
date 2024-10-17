@@ -1,6 +1,6 @@
 package com.task.onlinecoursemanagementsystem.common.lesson.service;
 
-import com.task.onlinecoursemanagementsystem.common.AllowedFileTypes;
+import com.task.onlinecoursemanagementsystem.common.enums.AllowedFileTypes;
 import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.Attachment;
 import com.task.onlinecoursemanagementsystem.common.attachment.service.AttachmentService;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Course;
@@ -18,8 +18,6 @@ import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.Le
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springdoc.core.service.SecurityService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
