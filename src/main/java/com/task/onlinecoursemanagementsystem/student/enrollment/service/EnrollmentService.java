@@ -72,13 +72,13 @@ public class EnrollmentService {
 
     public void updateProgress(Long id, ProgressUpdateDto data) {
         Enrollment enrollment = lookupEnrollment(id);
-        if (!enrollment.isActive()) {
-            throw new BusinessException("course is not active");
-        }
-
         User currentStudent = userService.curentUser();
         if (!currentStudent.equals(enrollment.getStudent())) {
             throw new SecurityViolationException();
+        }
+
+        if (!enrollment.isActive()) {
+            throw new BusinessException("you are not enrolled in this course.");
         }
 
         if (EnrollmentStatus.COMPLETED.equals(enrollment.getStatus())) {

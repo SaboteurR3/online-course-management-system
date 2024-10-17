@@ -20,7 +20,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                 c.title                 AS courseName,
                 ci                      AS instructor
             FROM Lesson l
-            JOIN FETCH Course c on c.id = l.course.id
+            JOIN Course c on c.id = l.course.id
             JOIN c.instructor ci
             WHERE (:courseId is null or c.id = :courseId)
                         AND (:search is null
