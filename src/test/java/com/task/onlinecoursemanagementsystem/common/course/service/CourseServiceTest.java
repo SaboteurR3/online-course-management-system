@@ -14,6 +14,7 @@ import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.Co
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.UserGetDto;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,6 +49,24 @@ class CourseServiceTest {
 
     @InjectMocks
     CourseService courseService;
+
+    private static CourseCreateDto courseCreateDto;
+    private static CourseCreateDto courseUpdateDto;
+
+    @BeforeAll
+    public static void setupObjects() {
+        courseCreateDto = CourseCreateDto.builder()
+                .title("New Course")
+                .description("Course Description")
+                .category(CourseCategory.SCIENCE)
+                .build();
+
+        courseUpdateDto = CourseCreateDto.builder()
+                .title("Updated Course")
+                .description("Updated Description")
+                .category(CourseCategory.SCIENCE)
+                .build();
+    }
 
     @Nested
     class TestLookupCourse {
@@ -158,11 +177,10 @@ class CourseServiceTest {
 
         @Test
         void test_createCourse() {
-            CourseCreateDto createDto = new CourseCreateDto("New Course", "Course Description", CourseCategory.SCIENCE);
             User currentUser = mock(User.class);
 
             when(userService.curentUser()).thenReturn(currentUser);
-            courseService.createCourse(createDto);
+            courseService.createCourse(courseCreateDto);
 
             ArgumentCaptor<Course> courseCaptor = ArgumentCaptor.forClass(Course.class);
             verify(repository).saveAndFlush(courseCaptor.capture());
@@ -176,12 +194,11 @@ class CourseServiceTest {
 
         @Test
         void test_whenTitleExists() {
-            CourseCreateDto createDto = new CourseCreateDto("Existing Course", "Course Description", CourseCategory.SCIENCE);
             when(userService.curentUser()).thenReturn(new User());
 
             doThrow(new RuntimeException("test: uq_title")).when(repository).saveAndFlush(any());
 
-            assertThatThrownBy(() -> courseService.createCourse(createDto))
+            assertThatThrownBy(() -> courseService.createCourse(courseCreateDto))
                     .isInstanceOf(BusinessException.class)
                     .hasMessage("title_exists");
         }
@@ -193,21 +210,19 @@ class CourseServiceTest {
         @Test
         void test_whenCourseNotExists() {
             Long id = 1000L;
-            CourseCreateDto updateDto = new CourseCreateDto("Updated Course", "Updated Description", CourseCategory.SCIENCE);
 
             when(repository.findById(eq(id))).thenReturn(Optional.empty());
-            assertThrows(SecurityViolationException.class, () -> courseService.updateCourse(id, updateDto));
+            assertThrows(SecurityViolationException.class, () -> courseService.updateCourse(id, courseUpdateDto));
         }
 
         @Test
         void test_whenUpdateSuccessful() {
             Long id = 1001L;
             Course existingCourse = Course.builder().id(id).title("Old Course").build();
-            CourseCreateDto updateDto = new CourseCreateDto("Updated Course", "Updated Description", CourseCategory.SCIENCE);
 
             when(repository.findById(eq(id))).thenReturn(Optional.of(existingCourse));
 
-            courseService.updateCourse(id, updateDto);
+            courseService.updateCourse(id, courseUpdateDto);
             assertEquals("Updated Course", existingCourse.getTitle());
             assertEquals("Updated Description", existingCourse.getDescription());
             assertEquals(CourseCategory.SCIENCE, existingCourse.getCategory());
@@ -217,12 +232,11 @@ class CourseServiceTest {
         void test_whenTitleExists() {
             Long id = 1001L;
             Course existingCourse = Course.builder().id(id).title("Old Course").build();
-            CourseCreateDto updateDto = new CourseCreateDto("Updated Course", "Updated Description", CourseCategory.SCIENCE);
 
             when(repository.findById(eq(id))).thenReturn(Optional.of(existingCourse));
             doThrow(new RuntimeException("test: uq_title")).when(repository).saveAndFlush(any());
 
-            assertThatThrownBy(() -> courseService.updateCourse(id, updateDto))
+            assertThatThrownBy(() -> courseService.updateCourse(id, courseUpdateDto))
                     .isInstanceOf(BusinessException.class)
                     .hasMessage("title_exists");
         }
