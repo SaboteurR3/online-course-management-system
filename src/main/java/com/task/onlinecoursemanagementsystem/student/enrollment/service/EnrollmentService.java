@@ -92,6 +92,14 @@ public class EnrollmentService {
 
     public void unenrollFromCourse(Long id) {
         Enrollment enrollment = lookupEnrollment(id);
+        if(!enrollment.isActive()) {
+            throw new SecurityViolationException();
+        }
+
+        User currentStudent = userService.curentUser();
+        Course course = courseService.findCourseForUpdate(enrollment.getCourse().getId());
+        course.setCurrentCapacity(course.getCurrentCapacity() - 1);
+        course.getStudents().remove(currentStudent);
         enrollment.setActive(false);
     }
 
