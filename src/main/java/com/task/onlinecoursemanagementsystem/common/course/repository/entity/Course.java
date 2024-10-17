@@ -53,7 +53,7 @@ public class Course {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    private CourseCategory category; // add syllabus
+    private CourseCategory category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id")

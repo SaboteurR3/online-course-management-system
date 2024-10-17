@@ -1,11 +1,15 @@
 package com.task.onlinecoursemanagementsystem.student.enrollment.repository;
 
+import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Course;
+import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.student.enrollment.controller.dto.EnrollmentsGetDto;
 import com.task.onlinecoursemanagementsystem.student.enrollment.repository.entity.Enrollment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.Optional;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     @Query(
@@ -31,4 +35,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
                                            Long studentId,
                                            Boolean active,
                                            String search);
+
+    Optional<Enrollment> findByCourseAndStudent(Course course, User user);
 }

@@ -96,11 +96,13 @@ create sequence seq_enrollment start with 1000;
 grant select, usage on seq_enrollment to postgres;
 create table enrollment
 (
-    id         bigint       not null primary key,
-    student_id bigint       not null,
-    course_id  bigint       not null,
-    status     varchar(255) not null,
-    is_active  boolean      not null,
+    id              bigint         not null primary key,
+    student_id      bigint         not null,
+    course_id       bigint         not null,
+    enrollment_date timestamp(255) not null,
+    progress        numeric        not null,
+    status          varchar(255)   not null,
+    is_active       boolean        not null,
     foreign key (student_id) references sec_user (id),
     foreign key (course_id) references course (id),
     constraint unique_enrollment unique (student_id, course_id)

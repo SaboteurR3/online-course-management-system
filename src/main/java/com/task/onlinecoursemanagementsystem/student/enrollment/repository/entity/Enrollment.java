@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -50,7 +51,7 @@ public class Enrollment {
     private LocalDateTime enrollmentDate;
 
     @Column(name = "progress")
-    private Double progress;
+    private BigDecimal progress;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
