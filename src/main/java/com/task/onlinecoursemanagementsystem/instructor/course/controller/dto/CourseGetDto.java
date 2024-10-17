@@ -12,5 +12,9 @@ public interface CourseGetDto {
 
     CourseCategory getCategory();
 
+    Integer getMaxCapacity();
+
+    Integer getCurrentCapacity();
+
     UserGetDto getInstructor();
 }

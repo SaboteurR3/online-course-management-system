@@ -16,11 +16,13 @@ import java.util.Optional;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("""
             SELECT
-                c.id             AS id,
-                c.title          AS title,
-                c.description    AS description,
-                c.category       AS category,
-                ci               AS instructor
+                c.id                AS id,
+                c.title             AS title,
+                c.description       AS description,
+                c.category          AS category,
+                c.maxCapacity       AS maxCapacity,
+                c.currentCapacity   AS currentCapacity,
+                ci                  AS instructor
             FROM Course c
             JOIN c.instructor ci
             WHERE (:category is null or c.category = :category)

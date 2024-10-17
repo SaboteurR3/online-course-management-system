@@ -12,6 +12,8 @@ public record CourseCreateDto(
         @NotEmpty
         String description,
         @NotNull
-        CourseCategory category
+        CourseCategory category,
+        @NotNull
+        Integer maxCapacity
 ) {
 }

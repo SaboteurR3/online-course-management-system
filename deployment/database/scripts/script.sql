@@ -36,11 +36,13 @@ create sequence seq_course start with 1000;
 grant select, usage on seq_course to postgres;
 create table course
 (
-    id            bigint        not null primary key,
-    title         varchar(255)  not null,
-    description   varchar(4000) not null,
-    category      varchar(255)  not null,
-    instructor_id bigint        not null,
+    id               bigint        not null primary key,
+    title            varchar(255)  not null,
+    description      varchar(4000) not null,
+    category         varchar(255)  not null,
+    instructor_id    bigint        not null,
+    max_capacity     integer       not null,
+    current_capacity integer       not null,
     foreign key (instructor_id) references sec_user (id),
     constraint uq_title unique (title)
 );

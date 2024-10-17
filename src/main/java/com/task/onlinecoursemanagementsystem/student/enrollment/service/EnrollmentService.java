@@ -48,8 +48,18 @@ public class EnrollmentService {
     public void enrollStudent(Long courseId) {
         User currentStudent = userService.curentUser();
         Course course = courseService.lookupCourse(courseId);
-        course.getStudents().add(currentStudent);
+
+        synchronized (this) {
+            if (!course.canEnrollStudent()) {
+                throw new BusinessException("course is full");
+            }
+
+            course.setCurrentCapacity(course.getCurrentCapacity() + 1);
+            course.getStudents().add(currentStudent);
+        }
+
         Enrollment enrollment = Enrollment.builder()
+
                 .student(currentStudent)
                 .course(course)
                 .enrollmentDate(LocalDateTime.now())

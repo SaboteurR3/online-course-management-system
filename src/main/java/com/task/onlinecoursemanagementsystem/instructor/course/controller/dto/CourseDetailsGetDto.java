@@ -10,6 +10,8 @@ public record CourseDetailsGetDto(
         String title,
         String description,
         CourseCategory category,
+        Integer maxCapacity,
+        Integer currentCapacity,
         String instructorName,
         String instructorEmail,
         List<CourseLessonsGetDto> lessons

@@ -65,6 +65,8 @@ public class CourseService {
                     .title(course.getTitle())
                     .description(course.getDescription())
                     .category(course.getCategory())
+                    .maxCapacity(course.getMaxCapacity())
+                    .currentCapacity(course.getCurrentCapacity())
                     .instructorName(String.join(" ", instructor.getFirstName(), instructor.getLastName()))
                     .instructorEmail(instructor.getEmail())
                     .lessons(lessonDtos)
@@ -94,6 +96,8 @@ public class CourseService {
                 .lessons(new ArrayList<>())
                 .enrollments(new ArrayList<>())
                 .reviews(new ArrayList<>())
+                .maxCapacity(data.maxCapacity())
+                .currentCapacity(0)
                 .build();
 
         try {
@@ -108,6 +112,7 @@ public class CourseService {
         course.setTitle(data.title());
         course.setDescription(data.description());
         course.setCategory(data.category());
+        course.setMaxCapacity(data.maxCapacity());
 
         try {
             repository.saveAndFlush(course);

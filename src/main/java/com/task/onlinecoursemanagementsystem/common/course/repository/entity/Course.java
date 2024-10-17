@@ -1,9 +1,9 @@
 package com.task.onlinecoursemanagementsystem.common.course.repository.entity;
 
-import com.task.onlinecoursemanagementsystem.student.enrollment.repository.entity.Enrollment;
 import com.task.onlinecoursemanagementsystem.common.lesson.repository.entity.Lesson;
 import com.task.onlinecoursemanagementsystem.common.review.repository.entity.Review;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
+import com.task.onlinecoursemanagementsystem.student.enrollment.repository.entity.Enrollment;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -75,6 +75,16 @@ public class Course {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
+
+    @Column(name = "max_capacity")
+    private Integer maxCapacity;
+
+    @Column(name = "current_capacity")
+    private Integer currentCapacity;
+
+    public boolean canEnrollStudent() {
+        return currentCapacity < maxCapacity;
+    }
 
     @Override
     public boolean equals(Object o) {
