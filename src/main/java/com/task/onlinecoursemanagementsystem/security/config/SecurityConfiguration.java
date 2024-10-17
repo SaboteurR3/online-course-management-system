@@ -21,9 +21,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static com.task.onlinecoursemanagementsystem.security.user.repository.entity.Role.INSTRUCTOR;
-import static com.task.onlinecoursemanagementsystem.security.user.repository.entity.Role.STUDENT;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -47,16 +44,15 @@ public class SecurityConfiguration {
                         configurer -> configurer
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/swagger/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/profile").hasAnyRole(STUDENT.name(), INSTRUCTOR.name())
+                                .requestMatchers(HttpMethod.GET, "/profile").authenticated()
                                 .requestMatchers(HttpMethod.POST, "registration/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "student/session/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "instructor/session/**").permitAll()
-                                .requestMatchers("/instructor/courses/**").hasAnyRole(INSTRUCTOR.name())
-                                .requestMatchers("/instructor/lessons/**").hasAnyRole(INSTRUCTOR.name())
-                                .requestMatchers("/student/lessons/**").hasAnyRole(STUDENT.name())
-                                .requestMatchers("/student/enrollments/**").hasAnyRole(STUDENT.name())
-                                .requestMatchers("/reviews/**").hasAnyRole(STUDENT.name())
-                                .requestMatchers("/files/**").hasAnyRole(INSTRUCTOR.name())
+                                .requestMatchers("/instructor/courses/**").authenticated()
+                                .requestMatchers("/instructor/lessons/**").authenticated()
+                                .requestMatchers("/student/lessons/**").authenticated()
+                                .requestMatchers("/student/enrollments/**").authenticated()
+                                .requestMatchers("/reviews/**").authenticated()
                 )
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
