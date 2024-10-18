@@ -17,6 +17,22 @@ create table sec_user
 );
 grant select, insert, update on sec_user to postgres;
 
+create sequence seq_attachment start with 1000;
+grant select, usage on seq_attachment to postgres;
+create table attachment
+(
+    id             bigint       not null primary key,
+    name           varchar(255) not null,
+    type           varchar(255) not null,
+    content_type   varchar(255) not null,
+    creation_ts    timestamp    not null,
+    is_active      boolean      not null,
+    author_user_id bigint
+        constraint fk_attachment_author_user_id references sec_user,
+    constraint uq_attachment_name unique (name)
+);
+grant select, insert, update, delete on attachment to postgres;
+
 create sequence seq_token start with 1000;
 grant select, usage on seq_token to postgres;
 create table token
@@ -72,22 +88,6 @@ create table lesson
     constraint uq_course_title_start_time unique (course_id, title, start_time)
 );
 grant select, insert, update, delete on lesson to postgres;
-
-create sequence seq_attachment start with 1000;
-grant select, usage on seq_attachment to postgres;
-create table attachment
-(
-    id             bigint       not null primary key,
-    name           varchar(255) not null,
-    type           varchar(255) not null,
-    content_type   varchar(255) not null,
-    creation_ts    timestamp    not null,
-    is_active      boolean      not null,
-    author_user_id bigint
-        constraint fk_attachment_author_user_id references sec_user,
-    constraint uq_attachment_name unique (name)
-);
-grant select, insert, update, delete on attachment to postgres;
 
 create table lesson_attachments
 (
