@@ -6,6 +6,8 @@ You can use this interface to explore the available APIs, their request and resp
 
 
 ## Run MinIO in Docker Desktop
+### Step 1: Pull the MinIO Docker Image: docker pull minio/minio
+### Step 2: Create a custom Docker network for MinIO: docker network create minio-network
 
 To run MinIO in Docker Desktop, execute the following command in your terminal or PowerShell:
 
