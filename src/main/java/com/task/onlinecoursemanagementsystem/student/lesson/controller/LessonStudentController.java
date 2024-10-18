@@ -25,16 +25,18 @@ import java.util.List;
 @RestController
 @RequestMapping("student/lessons")
 @RequiredArgsConstructor
-public class LessonStudentController {
+public class LessonStudentController implements LessonStudentControllerApi{
     private final CourseService courseService;
     private final LessonService lessonService;
 
+    @Override
     @GetMapping("courses")
     @PreAuthorize("hasRole('STUDENT')")
     public List<IdNameDto> getCourses(@RequestParam(required = false) String search) {
         return courseService.getCourses(search);
     }
 
+    @Override
     @GetMapping
     @PreAuthorize("hasRole('STUDENT')")
     public PageView<LessonGetDto> getLessons(
@@ -45,12 +47,14 @@ public class LessonStudentController {
         return PageView.of(lessonService.getLessons(pageAndSortCriteria, courseId, search));
     }
 
+    @Override
     @GetMapping("files")
     @PreAuthorize("hasRole('STUDENT')")
     public List<IdNameDto> getStudentLessonFiles() {
         return lessonService.getStudentLessonFiles();
     }
 
+    @Override
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("download/{fileName}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {

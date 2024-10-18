@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/profile")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements UserControllerApi{
     private final UserService userService;
 
+    @Override
     @GetMapping
     @PermitAll
     public UserDTO getUserProfile() {

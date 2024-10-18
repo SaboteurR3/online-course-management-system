@@ -32,16 +32,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("student/enrollments")
 @RequiredArgsConstructor
-public class EnrollmentController {
+public class EnrollmentController implements EnrollmentControllerApi{
     private final CourseService courseService;
     private final EnrollmentService enrollmentService;
 
+    @Override
     @GetMapping("course-categories")
     @PreAuthorize("hasRole('STUDENT')")
     public CourseCategory[] getCourseCategories() {
         return CourseCategory.values();
     }
 
+    @Override
     @GetMapping("courses")
     @PreAuthorize("hasRole('STUDENT')")
     public PageView<CourseGetDto> getCourses(
@@ -52,18 +54,21 @@ public class EnrollmentController {
         return PageView.of(courseService.getCourses(pageAndSortCriteria, category, search));
     }
 
+    @Override
     @GetMapping("courses/{id}")
     @PreAuthorize("hasRole('STUDENT')")
     public CourseDetailsGetDto getCourseById(@PathVariable Long id) {
         return courseService.getCourseDetailsById(id);
     }
 
+    @Override
     @GetMapping("courses/{courseId}/syllabus")
     @PreAuthorize("hasRole('STUDENT')")
     public IdNameDto getCourseSyllabusForStudent(@PathVariable Long courseId) {
         return courseService.getCourseSyllabusForStudent(courseId);
     }
 
+    @Override
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("courses/{courseId}/download-syllabus/{fileName}")
     public ResponseEntity<Resource> downloadFile(
@@ -81,6 +86,7 @@ public class EnrollmentController {
         }
     }
 
+    @Override
     @GetMapping
     @PreAuthorize("hasRole('STUDENT')")
     public PageView<EnrollmentsGetDto> getEnrollments(
@@ -91,6 +97,7 @@ public class EnrollmentController {
         return PageView.of(enrollmentService.getEnrollments(pageAndSortCriteria, courseId, search));
     }
 
+    @Override
     @PostMapping
     @PreAuthorize("hasRole('STUDENT')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -98,6 +105,7 @@ public class EnrollmentController {
         enrollmentService.enrollStudent(courseId);
     }
 
+    @Override
     @PatchMapping("{id}/change-progress")
     @PreAuthorize("hasRole('STUDENT')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -107,6 +115,7 @@ public class EnrollmentController {
         enrollmentService.updateProgress(id, progressUpdateDto);
     }
 
+    @Override
     @PatchMapping("{id}/unenroll")
     @PreAuthorize("hasRole('STUDENT')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

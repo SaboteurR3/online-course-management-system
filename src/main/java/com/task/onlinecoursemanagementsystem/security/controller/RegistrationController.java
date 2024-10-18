@@ -6,7 +6,6 @@ import com.task.onlinecoursemanagementsystem.security.controller.dto.RegisterIns
 import com.task.onlinecoursemanagementsystem.security.controller.dto.RegisterStudentRequestDto;
 import com.task.onlinecoursemanagementsystem.security.service.RegistrationService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,19 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("registration")
 @RequiredArgsConstructor
-public class RegistrationController {
+public class RegistrationController implements RegistrationControllerApi {
     private final RegistrationService service;
 
+    @Override
     @PostMapping("student")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody @NotNull @Valid RegisterStudentRequestDto request
+            @RequestBody @Valid RegisterStudentRequestDto request
     ) {
         return ResponseEntity.ok(service.registerStudent(request));
     }
 
+    @Override
     @PostMapping("instructor")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody @NotNull @Valid RegisterInstructorRequestDto request
+            @RequestBody @Valid RegisterInstructorRequestDto request
     ) {
         return ResponseEntity.ok(service.registerInstructor(request));
     }

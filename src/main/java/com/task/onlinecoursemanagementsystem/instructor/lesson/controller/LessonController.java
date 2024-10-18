@@ -34,16 +34,18 @@ import java.util.List;
 @RestController
 @RequestMapping("instructor/lessons")
 @RequiredArgsConstructor
-public class LessonController {
+public class LessonController implements LessonControllerApi{
     private final CourseService courseService;
     private final LessonService lessonService;
 
+    @Override
     @GetMapping("courses")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public List<IdNameDto> getCourses(@RequestParam(required = false) String search) {
         return courseService.getCourses(search);
     }
 
+    @Override
     @GetMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public PageView<LessonGetDto> getLessons(
@@ -54,6 +56,7 @@ public class LessonController {
         return PageView.of(lessonService.getLessons(pageAndSortCriteria, courseId, search));
     }
 
+    @Override
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -63,6 +66,7 @@ public class LessonController {
         lessonService.createLesson(data, attachments);
     }
 
+    @Override
     @PutMapping(path = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -74,12 +78,14 @@ public class LessonController {
         lessonService.updateLesson(id, data, attachments);
     }
 
+    @Override
     @GetMapping("files")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public List<IdNameDto> getLessonFiles(@RequestParam(required = false) Long lessonId) {
         return lessonService.getInstructorLessonFiles(lessonId);
     }
 
+    @Override
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("download-file/{fileName}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
@@ -95,6 +101,7 @@ public class LessonController {
         }
     }
 
+    @Override
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

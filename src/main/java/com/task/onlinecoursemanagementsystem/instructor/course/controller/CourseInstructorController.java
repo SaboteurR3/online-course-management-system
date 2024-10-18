@@ -40,16 +40,18 @@ import java.util.List;
 @RestController
 @RequestMapping("instructor/courses")
 @RequiredArgsConstructor
-public class CourseInstructorController {
+public class CourseInstructorController implements CourseInstructorControllerApi{
     private final ReviewService reviewService;
     private final CourseService courseService;
 
+    @Override
     @GetMapping("categories")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public CourseCategory[] getCourseCategories() {
         return CourseCategory.values();
     }
 
+    @Override
     @GetMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public PageView<CourseGetDto> getCourses(
@@ -60,18 +62,21 @@ public class CourseInstructorController {
         return PageView.of(courseService.getCourses(pageAndSortCriteria, category, search));
     }
 
+    @Override
     @GetMapping("{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public CourseDetailsGetDto getCourseById(@PathVariable Long id) {
         return courseService.getCourseDetailsById(id);
     }
 
+    @Override
     @GetMapping("{id}/students")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public List<UserGetDto> getCourseStudents(@PathVariable Long id) {
         return courseService.getCourseStudents(id);
     }
 
+    @Override
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -81,6 +86,7 @@ public class CourseInstructorController {
         courseService.createCourse(data, attachment);
     }
 
+    @Override
     @PutMapping("{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -91,6 +97,7 @@ public class CourseInstructorController {
         courseService.updateCourse(id, data);
     }
 
+    @Override
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -98,6 +105,7 @@ public class CourseInstructorController {
         courseService.deleteCourse(id);
     }
 
+    @Override
     @GetMapping("reviews")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public PageView<ReviewGetDto> getCourseReviews(
@@ -108,12 +116,14 @@ public class CourseInstructorController {
         return PageView.of(reviewService.getCourseReviews(pageAndSortCriteria, courseId, rating, search));
     }
 
+    @Override
     @GetMapping("{courseId}/syllabus")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public IdNameDto getCourseSyllabus(@PathVariable Long courseId) {
         return courseService.getSyllabus(courseId);
     }
 
+    @Override
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("download-syllabus/{fileName}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {

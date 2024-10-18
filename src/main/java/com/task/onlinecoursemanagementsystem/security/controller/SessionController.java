@@ -7,7 +7,6 @@ import com.task.onlinecoursemanagementsystem.security.service.AuthenticationServ
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,18 +22,18 @@ import java.io.IOException;
         "instructor/session"
 })
 @RequiredArgsConstructor
-public class SessionController {
-
+public class SessionController implements SessionControllerApi {
     private final AuthenticationService service;
 
-
+    @Override
     @PostMapping
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody @NotNull @Valid AuthenticationRequestDto request
+            @RequestBody @Valid AuthenticationRequestDto request
     ) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
+    @Override
     @PostMapping("refresh-token")
     public void refreshToken(
             HttpServletRequest request,

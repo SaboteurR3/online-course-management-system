@@ -25,17 +25,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
-public class ReviewController {
+public class ReviewController implements ReviewControllerApi{
 
     private final ReviewService reviewService;
     private final CourseService courseService;
 
+    @Override
     @GetMapping("course-categories")
     @PreAuthorize("hasRole('STUDENT')")
     public CourseCategory[] getCourseCategories() {
         return CourseCategory.values();
     }
 
+    @Override
     @GetMapping("courses")
     @PreAuthorize("hasRole('STUDENT')")
     public PageView<CourseGetDto> getCourses(
@@ -46,6 +48,7 @@ public class ReviewController {
         return PageView.of(courseService.getCourses(pageAndSortCriteria, category, search));
     }
 
+    @Override
     @GetMapping
     @PreAuthorize("hasRole('STUDENT')")
     public PageView<ReviewGetDto> getReviews(
@@ -56,6 +59,7 @@ public class ReviewController {
         return PageView.of(reviewService.getReviews(pageAndSortCriteria, courseId, rating, search));
     }
 
+    @Override
     @PostMapping
     @PreAuthorize("hasRole('STUDENT')")
     @ResponseStatus(HttpStatus.CREATED)
