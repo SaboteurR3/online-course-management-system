@@ -43,6 +43,7 @@ create table course
     instructor_id    bigint        not null,
     max_capacity     integer       not null,
     current_capacity integer       not null,
+    syllabus_id      bigint references attachment (id),
     foreign key (instructor_id) references sec_user (id),
     constraint uq_title unique (title)
 );
@@ -78,6 +79,7 @@ create table attachment
 (
     id             bigint       not null primary key,
     name           varchar(255) not null,
+    type           varchar(255) not null,
     content_type   varchar(255) not null,
     creation_ts    timestamp    not null,
     is_active      boolean      not null,

@@ -1,7 +1,8 @@
 package com.task.onlinecoursemanagementsystem.common.attachment.service;
 
 import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.Attachment;
-import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.AttachmentRepository;
+import com.task.onlinecoursemanagementsystem.common.attachment.repository.AttachmentRepository;
+import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.AttachmentType;
 import com.task.onlinecoursemanagementsystem.minio.service.MinioService;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +18,10 @@ public class AttachmentService {
     private final MinioService minioService;
     private final AttachmentRepository repository;
 
-    public Attachment saveAttachment(User author, MultipartFile file) {
+    public Attachment saveAttachment(User author, AttachmentType attachmentType, MultipartFile file) {
         Attachment attachment = Attachment.builder()
                 .name(file.getOriginalFilename())
+                .type(attachmentType)
                 .contentType(file.getContentType())
                 .author(author)
                 .creationTs(LocalDateTime.now())

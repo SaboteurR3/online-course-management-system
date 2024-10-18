@@ -1,5 +1,6 @@
 package com.task.onlinecoursemanagementsystem.common.course.repository.entity;
 
+import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.Attachment;
 import com.task.onlinecoursemanagementsystem.common.lesson.repository.entity.Lesson;
 import com.task.onlinecoursemanagementsystem.common.review.repository.entity.Review;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
@@ -18,6 +19,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -81,6 +83,11 @@ public class Course {
 
     @Column(name = "current_capacity")
     private Integer currentCapacity;
+
+    @Setter
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "syllabus_id")
+    private Attachment syllabus;
 
     public boolean canEnrollStudent() {
         return currentCapacity < maxCapacity;

@@ -20,12 +20,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -51,6 +53,7 @@ class CourseInstructorControllerTest {
                 .title("title")
                 .description("description")
                 .category(CourseCategory.SCIENCE)
+                .maxCapacity(10)
                 .build();
     }
 
@@ -104,9 +107,9 @@ class CourseInstructorControllerTest {
 
     @Test
     void test_createCourse() {
-        doNothing().when(courseService).createCourse(any());
-        controller.createCourse(courseCreateDto);
-        verify(courseService).createCourse(courseCreateDto);
+        MultipartFile attachment = mock(MultipartFile.class);
+        controller.createCourse(courseCreateDto, attachment);
+        verify(courseService).createCourse(eq(courseCreateDto), eq(attachment));
     }
 
     @Test

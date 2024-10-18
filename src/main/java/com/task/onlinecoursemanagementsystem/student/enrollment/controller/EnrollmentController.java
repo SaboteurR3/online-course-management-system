@@ -2,6 +2,7 @@ package com.task.onlinecoursemanagementsystem.student.enrollment.controller;
 
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.CourseCategory;
 import com.task.onlinecoursemanagementsystem.common.course.service.CourseService;
+import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
 import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageAndSortCriteria;
 import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageView;
 import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.CourseDetailsGetDto;
@@ -11,7 +12,12 @@ import com.task.onlinecoursemanagementsystem.student.enrollment.controller.dto.P
 import com.task.onlinecoursemanagementsystem.student.enrollment.service.EnrollmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -50,6 +56,29 @@ public class EnrollmentController {
     @PreAuthorize("hasRole('STUDENT')")
     public CourseDetailsGetDto getCourseById(@PathVariable Long id) {
         return courseService.getCourseDetailsById(id);
+    }
+
+    @GetMapping("courses/{courseId}/syllabus")
+    @PreAuthorize("hasRole('STUDENT')")
+    public IdNameDto getCourseSyllabusForStudent(@PathVariable Long courseId) {
+        return courseService.getCourseSyllabusForStudent(courseId);
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("courses/{courseId}/download-syllabus/{fileName}")
+    public ResponseEntity<Resource> downloadFile(
+            @PathVariable Long courseId,
+            @PathVariable String fileName) {
+        try {
+            InputStreamResource resource = courseService.downloadSyllabusForStudent(courseId, fileName);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
 
     @GetMapping

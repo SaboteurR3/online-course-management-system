@@ -1,5 +1,6 @@
 package com.task.onlinecoursemanagementsystem.common.course.service;
 
+import com.task.onlinecoursemanagementsystem.common.attachment.service.AttachmentService;
 import com.task.onlinecoursemanagementsystem.common.course.repository.CourseRepository;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Course;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.CourseCategory;
@@ -14,6 +15,7 @@ import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.Co
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.UserGetDto;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
+import com.task.onlinecoursemanagementsystem.student.enrollment.service.EnrollmentService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +49,12 @@ class CourseServiceTest {
     UserService userService;
 
     @Mock
+    AttachmentService attachmentService;
+
+    @Mock
+    EnrollmentService enrollmentService;
+
+    @Mock
     CourseRepository repository;
 
     @InjectMocks
@@ -59,6 +69,7 @@ class CourseServiceTest {
                 .title("New Course")
                 .description("Course Description")
                 .category(CourseCategory.SCIENCE)
+                .maxCapacity(10)
                 .build();
 
         courseUpdateDto = CourseCreateDto.builder()
@@ -178,9 +189,11 @@ class CourseServiceTest {
         @Test
         void test_createCourse() {
             User currentUser = mock(User.class);
+            MultipartFile attachment = mock(MultipartFile.class);
 
             when(userService.curentUser()).thenReturn(currentUser);
-            courseService.createCourse(courseCreateDto);
+            when(attachment.getContentType()).thenReturn("application/pdf");
+            courseService.createCourse(courseCreateDto, attachment);
 
             ArgumentCaptor<Course> courseCaptor = ArgumentCaptor.forClass(Course.class);
             verify(repository).saveAndFlush(courseCaptor.capture());
@@ -194,15 +207,25 @@ class CourseServiceTest {
 
         @Test
         void test_whenTitleExists() {
-            when(userService.curentUser()).thenReturn(new User());
+            MultipartFile attachment = mock(MultipartFile.class);
+            when(attachment.getContentType()).thenReturn("application/pdf");
 
             doThrow(new RuntimeException("test: uq_title")).when(repository).saveAndFlush(any());
-
-            assertThatThrownBy(() -> courseService.createCourse(courseCreateDto))
+            assertThatThrownBy(() -> courseService.createCourse(courseCreateDto, attachment))
                     .isInstanceOf(BusinessException.class)
                     .hasMessage("title_exists");
         }
+
+        @Test
+        void test_whenInvalidAttachment() {
+            MultipartFile invalidAttachment = mock(MultipartFile.class);
+
+            when(invalidAttachment.getContentType()).thenReturn("incorrect");
+            assertThatThrownBy(() -> courseService.createCourse(courseCreateDto, invalidAttachment))
+                    .isInstanceOf(ResponseStatusException.class);
+        }
     }
+
 
     @Nested
     class TestUpdateCourse {

@@ -1,9 +1,13 @@
 package com.task.onlinecoursemanagementsystem.common.course.service;
 
+import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.Attachment;
+import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.AttachmentType;
+import com.task.onlinecoursemanagementsystem.common.attachment.service.AttachmentService;
 import com.task.onlinecoursemanagementsystem.common.course.repository.CourseRepository;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.Course;
 import com.task.onlinecoursemanagementsystem.common.course.repository.entity.CourseCategory;
 import com.task.onlinecoursemanagementsystem.common.dto.IdNameDto;
+import com.task.onlinecoursemanagementsystem.common.enums.AllowedFileTypes;
 import com.task.onlinecoursemanagementsystem.common.lesson.repository.entity.Lesson;
 import com.task.onlinecoursemanagementsystem.common.paginationandsort.PageAndSortCriteria;
 import com.task.onlinecoursemanagementsystem.common.service.ExceptionUtil;
@@ -16,23 +20,33 @@ import com.task.onlinecoursemanagementsystem.instructor.course.controller.dto.Co
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.UserGetDto;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
+import com.task.onlinecoursemanagementsystem.student.enrollment.repository.entity.Enrollment;
+import com.task.onlinecoursemanagementsystem.student.enrollment.service.EnrollmentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class CourseService {
     private final UserService userService;
+    private final AttachmentService attachmentService;
+    private final EnrollmentService enrollmentService;
     private final CourseRepository repository;
 
     public Course lookupCourse(Long id) {
@@ -89,19 +103,22 @@ public class CourseService {
                 .toList();
     }
 
-    public void createCourse(CourseCreateDto data) {
-        User currentUser = userService.curentUser();
+    public void createCourse(CourseCreateDto data, MultipartFile attachment) {
+        validateAttachment(attachment);
+
+        User author = userService.curentUser();
         Course course = Course.builder()
                 .title(data.title())
                 .description(data.description())
                 .category(data.category())
-                .instructor(currentUser)
+                .instructor(author)
                 .students(new HashSet<>())
                 .lessons(new ArrayList<>())
                 .enrollments(new ArrayList<>())
                 .reviews(new ArrayList<>())
                 .maxCapacity(data.maxCapacity())
                 .currentCapacity(0)
+                .syllabus(saveAttachment(author, attachment))
                 .build();
 
         try {
@@ -131,6 +148,44 @@ public class CourseService {
             repository.delete(course);
         } catch (DataIntegrityViolationException ex) {
             throw new BusinessException("cant_delete");
+        }
+    }
+
+    private Attachment saveAttachment(User author, MultipartFile file) {
+        return attachmentService.saveAttachment(author, AttachmentType.SYLLABUS, file);
+    }
+
+    public static void validateAttachment(MultipartFile attachment) {
+        if (Objects.nonNull(attachment) && !attachment.isEmpty() &&
+                !AllowedFileTypes.getValues(AllowedFileTypes.values()).contains(attachment.getContentType())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public IdNameDto getSyllabus(Long courseId) {
+        return repository.getCourseSyllabus(courseId);
+    }
+
+    public InputStreamResource downloadSyllabus(String fileName) {
+        return attachmentService.getFile(fileName);
+    }
+
+    public IdNameDto getCourseSyllabusForStudent(Long courseId) {
+        checkStudentEnrollment(courseId);
+        return repository.getCourseSyllabus(courseId);
+    }
+
+    public InputStreamResource downloadSyllabusForStudent(Long courseId, String fileName) {
+        checkStudentEnrollment(courseId);
+        return attachmentService.getFile(fileName);
+    }
+
+    private void checkStudentEnrollment(Long courseId) {
+        Course course = lookupCourse(courseId);
+        User user = userService.curentUser();
+        Enrollment enrollmentByCourseAndUser = enrollmentService.findEnrollementByCourseAndUser(course, user);
+        if (enrollmentByCourseAndUser == null) {
+            throw new SecurityViolationException();
         }
     }
 }

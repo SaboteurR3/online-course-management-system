@@ -1,5 +1,6 @@
 package com.task.onlinecoursemanagementsystem.common.lesson.service;
 
+import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.AttachmentType;
 import com.task.onlinecoursemanagementsystem.common.enums.AllowedFileTypes;
 import com.task.onlinecoursemanagementsystem.common.attachment.repository.entity.Attachment;
 import com.task.onlinecoursemanagementsystem.common.attachment.service.AttachmentService;
@@ -149,7 +150,7 @@ public class LessonService {
     }
 
     private Attachment saveAttachment(User author, MultipartFile file) {
-        return attachmentService.saveAttachment(author, file);
+        return attachmentService.saveAttachment(author, AttachmentType.LESSONS, file);
     }
 
     public List<IdNameDto> getInstructorLessonFiles(Long lessonId) {
