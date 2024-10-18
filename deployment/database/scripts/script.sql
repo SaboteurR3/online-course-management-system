@@ -84,7 +84,8 @@ create table attachment
     creation_ts    timestamp    not null,
     is_active      boolean      not null,
     author_user_id bigint
-        constraint fk_attachment_author_user_id references sec_user
+        constraint fk_attachment_author_user_id references sec_user,
+    constraint uq_attachment_name unique (name)
 );
 grant select, insert, update, delete on attachment to postgres;
 

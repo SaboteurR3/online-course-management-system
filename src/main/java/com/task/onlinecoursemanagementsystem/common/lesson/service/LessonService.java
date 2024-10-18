@@ -18,6 +18,7 @@ import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.Le
 import com.task.onlinecoursemanagementsystem.instructor.lesson.controller.dto.LessonUpdateDto;
 import com.task.onlinecoursemanagementsystem.security.user.repository.entity.User;
 import com.task.onlinecoursemanagementsystem.security.user.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,6 +36,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class LessonService {
     private final CourseService courseService;
