@@ -9,9 +9,9 @@ application:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/online_course_management
+    url: jdbc:postgresql://postgres:5432/online_course_management
     username: postgres
-    password: 1234
+    password: password
   jpa:
     show-sql: true
     properties:
@@ -37,7 +37,7 @@ springdoc:
     path: /swagger/ui.html
 ---
 minio:
-  url: http://localhost:9000
+  url: http://minio:9000
   access-key: minioadmin
   secret-key: minioadmin
   bucket-name: my-bucket

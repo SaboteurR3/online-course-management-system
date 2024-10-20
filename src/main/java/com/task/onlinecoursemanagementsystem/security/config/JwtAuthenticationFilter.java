@@ -67,13 +67,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return "/auth/login".equals(request.getRequestURI()) && "POST".equals(request.getMethod())
-               || "/auth/register".equals(request.getRequestURI()) && "POST".equals(request.getMethod())
+        return "/registration/**".equals(request.getRequestURI()) && "POST".equals(request.getMethod())
+               || "/student/session/**".equals(request.getRequestURI()) && "POST".equals(request.getMethod())
+               || "/instructor/session/**".equals(request.getRequestURI()) && "POST".equals(request.getMethod())
                || "/swagger/*F*".equals(request.getRequestURI()) && "GET".equals(request.getMethod())
-               || "/auth/refresh".equals(request.getRequestURI()) && "PATCH".equals(request.getMethod())
-               || "/products/**".equals(request.getRequestURI()) && "GET".equals(request.getMethod())
-               || "/products".equals(request.getRequestURI()) && "GET".equals(request.getMethod())
-               || "/products/popular-users".equals(request.getRequestURI()) && "GET".equals(request.getMethod())
-               || "/users/**".equals(request.getRequestURI()) && "GET".equals(request.getMethod());
+               || "/profile/**".equals(request.getRequestURI()) && "GET".equals(request.getMethod());
     }
 }

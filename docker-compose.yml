@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres-sql
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: online_course_management
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./deployment/database/scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  minio:
+    container_name: minio
+    image: minio/minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - app-network
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+
+  app:
+    container_name: online-course-management
+    image: saboteur3/online-course-management-system:test
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/online_course_management
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - "8089:8089"
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+      - minio
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  minio_data:
