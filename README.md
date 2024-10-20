@@ -6,5 +6,5 @@ You can use this interface to explore the available APIs, their request and resp
 
 
 ## To start the project run the following command in Docker Desktop
-### The bucket will be automatically created in MinIO when it starts
 docker compose up -d
+### The bucket will be automatically created in MinIO when it starts
