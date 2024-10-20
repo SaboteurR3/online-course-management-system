@@ -5,11 +5,5 @@ The APIs for this project can be accessed through the Swagger UI at the followin
 You can use this interface to explore the available APIs, their request and response formats, and test them directly from your browser.
 
 
-## Run MinIO in Docker Desktop
-### Step 1: Pull the MinIO Docker Image: docker pull minio/minio
-### Step 2: To run MinIO in Docker Desktop, execute the following command in your terminal or PowerShell:
-docker run -p 9000:9000 -p 9001:9001 \
--e "MINIO_ACCESS_KEY=minioadmin" \
--e "MINIO_SECRET_KEY=minioadminy" \
-minio/minio server /data --console-address ":9001"
-### Step 3: Login to MinIO Console(http://localhost:9001) and create a bucket with name my-bucket
+## To start the project run the following command in Docker Desktop
+docker compose up -d
